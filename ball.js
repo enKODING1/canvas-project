@@ -1,28 +1,32 @@
-export default class Ball{
-  constructor(x, y, radius, speed)
-  {
+export default class Ball {
+  constructor(x, y, z, radius, speed) {
     this.x = x;
     this.y = y;
+    this.z = z;
+    this.screenX = 0;
+    this.screenY = 0;
     this.radius = radius;
     this.speed = speed;
-    this.angle = 360;
+    this.angle = 0;
   }
 
-  draw(ctx)
-  {
-    const angle = this.angle * (Math.PI / 180);
-    const x = (10 * Math.cos(angle) - 10 * Math.sin(angle)) * this.radius;    
-    const y = (10 * Math.sin(angle) + 10 * Math.cos(angle)) * this.radius;
+  draw(ctx, camera) {
+    const angleRad = (this.angle * Math.PI) / 180;
+    const rotatedX = this.x * Math.cos(angleRad) + this.z * Math.sin(angleRad);
+    const rotatedY = this.y;
+    const rotatedZ = -this.x * Math.sin(angleRad) + this.z * Math.cos(angleRad);
 
-    if (this.angle <= 1)
-      this.angle = 360;
-    ctx.fillstyle = "black";
+    const perspective = camera.d / (camera.d + rotatedZ);
+    this.screenX = rotatedX * perspective + camera.x;
+    this.screenY = rotatedY * perspective + camera.y;
+
+    ctx.fillStyle = "black";
     ctx.beginPath();
-    ctx.translate(this.x, this.y);
-    ctx.arc(x, y, this.radius, 0, Math.PI * 2);
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.arc(this.screenX, this.screenY, this.radius * perspective, 0, Math.PI * 2);
     ctx.fill();
     ctx.closePath();
-    this.angle -= this.speed;
+
+    this.angle += this.speed;
+    if (this.angle >= 360) this.angle -= 360;
   }
 }
