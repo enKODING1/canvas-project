@@ -8,17 +8,37 @@ class App {
     this.camera = {
       x: window.innerWidth / 2,
       y: window.innerHeight / 2,
-      d: 50,
+      d: -400,
     };
 
     this.ball = [];
-    this.ball.push(new Ball(10, -100, 10, 5, 1));
-    this.ball.push(new Ball(10, 10, 10, 5, 1));
-    this.ball.push(new Ball(30, 30, 20, 5, 1));
-    this.ball.push(new Ball(40, 40, 20, 5, 1));
-    this.ball.push(new Ball(45, 50, 20, 5, 1));
-    
+    for (let i = 1; i < 30; i++) {
+      const x = 10 + i * 5;
+      const y = -150 + i * 5;
+      const z = 130;
+      const radius = 5;
+      const speed = Math.random() * 2 + 0.5;
+      const r = Math.floor(Math.random() * 255);
+      const g = Math.floor(Math.random() * 255);
+      const b = Math.floor(Math.random() * 255);
+      const color = `rgba(${r},${g},${b},0.4)`;
 
+      this.ball.push(new Ball(x, y, z, radius, speed, color));
+    }
+    for (let i = 1; i < 30; i++) {
+      const x = 10 + i * 5;
+      const y = 150 + -i * 5;
+      const z = 130;
+      const radius = 5;
+      const speed = Math.random() * 2 + 0.5;
+      const r = Math.floor(Math.random() * 255);
+      const g = Math.floor(Math.random() * 255);
+      const b = Math.floor(Math.random() * 255);
+      const color = `rgba(${r},${g},${b},0.4)`;
+
+      this.ball.push(new Ball(x, y, z, radius, speed, color));
+    }
+  
     this.resize();
     window.addEventListener("resize", this.resize.bind(this));
     window.addEventListener("keydown", this.updateCamera.bind(this));
@@ -30,12 +50,9 @@ class App {
     this.canvas.height = window.innerHeight;
   }
 
-  updateCamera(e)
-  {
-    if (e.keyCode == 187)
-      this.camera.d -= 1;
-    if (e.keyCode == 189)
-      this.camera.d += 1; 
+  updateCamera(e) {
+    if (e.keyCode == 187) this.camera.d -= 20;
+    if (e.keyCode == 189) this.camera.d += 20;
   }
 
   animate() {
@@ -44,30 +61,25 @@ class App {
     for (let i = 0; i < this.ball.length; i++) {
       this.ball[i].draw(this.ctx, this.camera);
     }
-    this.connect();
+    // this.connect();
   }
 
-  connect()
-  {
+  connect() {
     const length = this.ball.length;
-    
-    for(let i = 0; i < length; i++)
-    {
-      for(let j = i + 1; j < length; j++)
-      {
+
+    for (let i = 0; i < length; i++) {
+      for (let j = i + 1; j < length; j++) {
         const dx = this.ball[i].screenX - this.ball[j].screenX;
         const dy = this.ball[j].screenY - this.ball[j].screenY;
-        const distance = Math.sqrt((dx*dx) + (dy*dy));
+        const distance = Math.sqrt(dx * dx + dy * dy);
         console.log(distance);
-        if (distance < 200)
-        {
-            this.ctx.lineWidth = 1;
-            this.ctx.strokeStyle = "black";
-            this.ctx.moveTo(this.ball[i].screenX, this.ball[i].screenY);
-            this.ctx.lineTo(this.ball[j].screenX, this.ball[j].screenY);
-            this.ctx.stroke();
+        if (distance < 20) {
+          this.ctx.lineWidth = 1;
+          this.ctx.strokeStyle = this.ball[i].color;
+          this.ctx.moveTo(this.ball[i].screenX, this.ball[i].screenY);
+          this.ctx.lineTo(this.ball[j].screenX, this.ball[j].screenY);
+          this.ctx.stroke();
         }
-          
       }
     }
   }

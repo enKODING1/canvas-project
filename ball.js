@@ -1,5 +1,5 @@
 export default class Ball {
-  constructor(x, y, z, radius, speed) {
+  constructor(x, y, z, radius, speed, color) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -8,6 +8,7 @@ export default class Ball {
     this.radius = radius;
     this.speed = speed;
     this.angle = 0;
+    this.color = color;
   }
 
   draw(ctx, camera) {
@@ -20,7 +21,7 @@ export default class Ball {
     this.screenX = rotatedX * perspective + camera.x;
     this.screenY = rotatedY * perspective + camera.y;
 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.screenX, this.screenY, this.radius * perspective, 0, Math.PI * 2);
     ctx.fill();
