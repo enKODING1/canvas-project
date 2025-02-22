@@ -12,32 +12,37 @@ class App {
     };
 
     this.ball = [];
-    for (let i = 1; i < 30; i++) {
-      const x = 10 + i * 5;
-      const y = -150 + i * 5;
-      const z = 130;
-      const radius = 5;
-      const speed = Math.random() * 2 + 0.5;
-      const r = Math.floor(Math.random() * 255);
-      const g = Math.floor(Math.random() * 255);
-      const b = Math.floor(Math.random() * 255);
-      const color = `rgba(${r},${g},${b},0.4)`;
-
-      this.ball.push(new Ball(x, y, z, radius, speed, color));
+    const numBalls = 360;  
+    const radius = 200;   
+    
+    for (let i = 0; i < numBalls; i++) {
+      const theta = Math.acos(1 - (2 * i) / numBalls); 
+      const phi = Math.PI * (1 + Math.sqrt(5)) * i;   
+    
+      const x = Math.sin(theta) * Math.cos(phi) * radius;
+      const y = Math.sin(theta) * Math.sin(phi) * radius;
+      const z = Math.cos(theta) * radius;
+    
+      const ballRadius = 5;
+      const speed = Math.random() * 1 + 0.2;
+      const color = "black";
+    
+      this.ball.push(new Ball(x, y, z, ballRadius, speed, color));
     }
-    for (let i = 1; i < 30; i++) {
-      const x = 10 + i * 5;
-      const y = 150 + -i * 5;
-      const z = 130;
-      const radius = 5;
-      const speed = Math.random() * 2 + 0.5;
-      const r = Math.floor(Math.random() * 255);
-      const g = Math.floor(Math.random() * 255);
-      const b = Math.floor(Math.random() * 255);
-      const color = `rgba(${r},${g},${b},0.4)`;
+    // for (let i = 1; i < 30; i++) {
+    //   const x = 10 + i * 5;
+    //   const y = 150 + -i * 5;
+    //   const z = 160;
+    //   const radius = 5;
+    //   const speed = Math.random() * 2 + 0.5;
+    //   const r = Math.floor(Math.random() * 255);
+    //   const g = Math.floor(Math.random() * 255);
+    //   const b = Math.floor(Math.random() * 255);
+    //   // const color = `rgba(${r},${g},${b},0.4)`;
+    //   const color = "black";
 
-      this.ball.push(new Ball(x, y, z, radius, speed, color));
-    }
+    //   this.ball.push(new Ball(x, y, z, radius, speed, color));
+    // }
   
     this.resize();
     window.addEventListener("resize", this.resize.bind(this));
